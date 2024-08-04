@@ -1,12 +1,12 @@
 from CaptureRequest import CaptureRequest
-
+import time
 
 class Camera:
-    @staticmethod
-    def capture_image(request: 'CaptureRequest', callback):
-        # Simulate capturing image
+    def capture_image(self, request: 'CaptureRequest', callback):
+        # Simulate capturing image with delay
+        time.sleep(2)
         try:
-            success = True  # Simulated result
+            success = True  # Simulated result for success or failure
             result = "captured_image_data"
             callback(request, success, result)
         except Exception as e:

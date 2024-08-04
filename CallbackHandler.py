@@ -1,11 +1,14 @@
 from CaptureRequest import CaptureRequest
-
+import threading
 
 class CallbackHandler:
-    @staticmethod
-    def invoke_success(request: 'CaptureRequest', result: str):
-        request.success_callback(result)
+    def __init__(self):
+        self.lock = threading.Lock()
 
-    @staticmethod
-    def invoke_failure(request: 'CaptureRequest', error_message: str):
-        request.failure_callback(error_message)
+    def invoke_success(self, request: 'CaptureRequest', result: str):
+        with self.lock:
+            request.success_callback(request.request_id, result)
+
+    def invoke_failure(self, request: 'CaptureRequest', error_message: str):
+        with self.lock:
+            request.failure_callback(request.request_id, error_message)

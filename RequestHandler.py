@@ -1,25 +1,28 @@
 from queue import PriorityQueue
 from concurrent.futures import ThreadPoolExecutor
-
 from CallbackHandler import CallbackHandler
 from Camera import Camera
 from CaptureRequest import CaptureRequest
-
+import threading
 
 class RequestHandler:
     def __init__(self, camera: 'Camera', callback_handler: 'CallbackHandler'):
         self.request_queue = PriorityQueue()
-        self.executor = ThreadPoolExecutor(max_workers=10)  # Can be adjusted based on system capabilities
+        self.executor = ThreadPoolExecutor(max_workers=2)  # Allow multiple concurrent workers
         self.camera = camera
         self.callback_handler = callback_handler
+        self.lock = threading.Lock()  # To ensure thread safety
 
     def add_request(self, request: 'CaptureRequest'):
-        self.request_queue.put(request)
+        with self.lock:
+            self.request_queue.put(request)
         self.process_requests()
 
     def process_requests(self):
         while not self.request_queue.empty():
-            request = self.request_queue.get()
+            with self.lock:
+                request = self.request_queue.get()
+            # Process request in a thread
             self.executor.submit(self.handle_request, request)
 
     def handle_request(self, request: 'CaptureRequest'):

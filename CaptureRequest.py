@@ -1,8 +1,8 @@
 from typing import Callable
 
-
 class CaptureRequest:
-    def __init__(self, urgency: int, success_callback: Callable, failure_callback: Callable):
+    def __init__(self, request_id: int, urgency: int, success_callback: Callable, failure_callback: Callable):
+        self.request_id = request_id  # Simple sequential request ID
         self.urgency = urgency
         self.success_callback = success_callback
         self.failure_callback = failure_callback
