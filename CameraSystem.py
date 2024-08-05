@@ -7,3 +7,7 @@ class CameraSystem:
 
     def submit_capture_request(self, request: 'CaptureRequest'):
         self.request_handler.add_request(request)
+
+    def shutdown(self):
+        # Gracefully shut down the ThreadPoolExecutor to wait for all tasks to complete
+        self.request_handler.executor.shutdown(wait=True)
