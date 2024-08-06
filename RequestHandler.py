@@ -9,7 +9,7 @@ import threading
 class RequestHandler:
     def __init__(self, camera: 'Camera', callback_handler: 'CallbackHandler'):
         self.request_queue = PriorityQueue()
-        self.executor = ThreadPoolExecutor(max_workers=4)
+        self.executor = ThreadPoolExecutor(max_workers=1)
         self.camera = camera
         self.callback_handler = callback_handler
         self.lock = threading.Lock()
@@ -18,6 +18,7 @@ class RequestHandler:
     def add_request(self, request: 'CaptureRequest'):
         with self.lock:
             self.request_queue.put(request)
+            # Only add and process new requests if they aren't already active
             if request.request_id not in self.active_requests:
                 self.active_requests.add(request.request_id)
                 self.executor.submit(self.process_next_request)

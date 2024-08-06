@@ -21,7 +21,7 @@ def main():
     high_urgency_request = CaptureRequest(request_id=1, urgency=10, success_callback=success_callback,
                                           failure_callback=failure_callback)
     low_urgency_request = CaptureRequest(request_id=2, urgency=1, success_callback=success_callback,
-                                         failure_callback=failure_callback)
+                                          failure_callback=failure_callback)
     new_high_urgency_request = CaptureRequest(request_id=3, urgency=100, success_callback=success_callback,
                                           failure_callback=failure_callback)
 
@@ -30,10 +30,7 @@ def main():
     camera_system.submit_capture_request(high_urgency_request)
     camera_system.submit_capture_request(new_high_urgency_request)
 
-    # Allow some time for processing
-    time.sleep(5)
-
-    # Shutdown the camera system to ensure all tasks are complete
+    # Shutdown the camera system, waiting until all tasks are completed
     camera_system.shutdown()
 
 if __name__ == "__main__":
